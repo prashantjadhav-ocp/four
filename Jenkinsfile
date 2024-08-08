@@ -11,13 +11,15 @@ pipeline {
             steps {
                 script {
                     git branch: 'main' url: https://github.com/prashantjadhav-ocp/four.git
+                }     
             }
         }
         stage("Docker Build") {
             steps {
-              sh /}'''
+                script {
                   oc apply -f ./gitops-examples/bgd/
-              '''
+                }
             }
         }
+    }
 }
