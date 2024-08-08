@@ -7,18 +7,17 @@ pipeline {
                 echo 'Hello World'
             }
         }
-        stage("Checkout") {
+        stage("Get Git Repo") {
             steps {
-                checkout scm
+                script {
+                    git branch: 'main' url: https://github.com/prashantjadhav-ocp/four.git
             }
         }
         stage("Docker Build") {
             steps {
-              sh '''
-                  #oc start-build --from-build=<build_name>
+              sh /}'''
                   oc apply -f ./gitops-examples/bgd/
               '''
             }
         }
-    }
 }
