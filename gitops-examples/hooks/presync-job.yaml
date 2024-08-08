@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  creationTimestamp: null
+  name: pricelist-presync
+  namespace: pricelist
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      serviceAccountName: presyncjob-pricelist
+      containers:
+      - command:
+        - /bin/bash
+        - -c
+        - |
+          /usr/local/bin/maint-script.sh
+        image: quay.io/redhatworkshops/pricelist-maint:latest
+        imagePullPolicy: IfNotPresent
+        name: pricelist-presync
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "32m"
+          limits:
+            memory: "64Mi"
+            cpu: "64m"
+      restartPolicy: Never

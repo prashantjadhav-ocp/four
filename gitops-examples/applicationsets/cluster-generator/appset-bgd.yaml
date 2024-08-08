@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: bgd
+  namespace: openshift-gitops
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          bgd: dev # add this to the cluster secret. More info http://bit.ly/2ORvXhw
+  template:
+    metadata:
+      name: '{{name}}-bgd' # the "name" is the name field in the secret
+    spec:
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            maxDuration: 3m0s
+            factor: 2
+      source:
+        repoURL: https://github.com/christianh814/gitops-examples
+        targetRevision: main
+        path: applicationsets/cluster-generator/overlays/dev/
+      destination:
+        server: '{{server}}' # "server" from the field in the secret
+        namespace: bgd

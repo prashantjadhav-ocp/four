@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pricelist
+  namespace: argocd
+spec:
+  project: default
+  # Note it's "sources" vs "source"
+  sources:
+    - repoURL: https://github.com/christianh814/gitops-examples
+      path: applicationsets/rollingsync/apps/pricelist-config
+      targetRevision: main
+    - chart: mysql
+      repoURL: https://charts.bitnami.com/bitnami
+      targetRevision: 9.2.0
+      helm:
+        releaseName: pricelist-db
+        parameters:
+          - name: architecture
+            value: "replication"
+          - name: serviceAccount.name
+            value: "pricelist-db"
+          - name: auth.database
+            value: "pricelist"
+          - name: auth.username
+            value: "pricelist"
+          - name: auth.password
+            value: "pricelist"
+          - name: secondary.replicaCount
+            value: "2"
+    - repoURL: https://github.com/christianh814/gitops-examples
+      path: applicationsets/rollingsync/apps/pricelist-frontend
+      targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    ##namespace: default
+    namespace: pricelist
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m

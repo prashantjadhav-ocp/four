@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: pricelist-app
+  namespace: argocd
+spec:
+  generators:
+    # matrix 'parent' generator
+    - matrix:
+        generators:
+          # git generator, 'child' #1
+          - git:
+              repoURL: https://github.com/christianh814/gitops-examples
+              revision: main
+              directories:
+              - path: applicationsets/git-dir-generator/apps/*
+          # cluster generator, 'child' #2
+          - clusters:
+              selector:
+                matchLabels:
+                  pricelist: deploy
+  template:
+    metadata:
+      name: '{{name}}-{{path.basename}}'
+    spec:
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            maxDuration: 3m0s
+            factor: 2
+      source:
+        repoURL: https://github.com/christianh814/gitops-examples
+        targetRevision: main
+        path: '{{path}}'
+      destination:
+        server: '{{server}}'
+        namespace: pricelist
