@@ -10,7 +10,7 @@ pipeline {
         stage("Get Git Repo") {
             steps {
                 script {
-                    git branch: 'main' url: "https://github.com/prashantjadhav-ocp/four.git"
+                    git branch: 'main', url: 'https://github.com/prashantjadhav-ocp/four.git'
                 }     
             }
         }
