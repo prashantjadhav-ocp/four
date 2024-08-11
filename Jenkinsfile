@@ -16,7 +16,9 @@ pipeline {
         }
         stage("Docker Build") {
             steps {
+                sh """
                   oc apply -f ./gitops-examples/bgd/
+                """    
             }
         }
     }
