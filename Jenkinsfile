@@ -17,10 +17,11 @@ pipeline {
         stage("Docker Build") {
             steps {
                 sh """
-                  oc apply -f ./gitops-examples/bgd/bgd-namespace.yaml
-                  oc apply -f ./gitops-examples/bgd/bgd-deployment.yaml
-                  oc apply -f ./gitops-examples/bgd/bgd-svc.yaml
-                  oc apply -f ./gitops-examples/bgd/bgd-route.yaml
+                  oc apply -f ./gitops-examples/bgd/
+                 # oc apply -f ./gitops-examples/bgd/bgd-namespace.yaml
+                 # oc apply -f ./gitops-examples/bgd/bgd-deployment.yaml
+                 # oc apply -f ./gitops-examples/bgd/bgd-svc.yaml
+                 # oc apply -f ./gitops-examples/bgd/bgd-route.yaml
                 """    
             }
         }
