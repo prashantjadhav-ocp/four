@@ -14,7 +14,7 @@ pipeline {
                 }     
             }
         }
-        stage("APPLY BGD APPLICATION") {
+        stage("APPLY BGD APPLICATION and create a new namespace") {
             steps {
                 sh """
                   oc apply -f ./gitops-examples/bgd/
