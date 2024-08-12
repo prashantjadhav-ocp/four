@@ -14,7 +14,7 @@ pipeline {
                 }     
             }
         }
-        stage("Docker Build") {
+        stage("APPLY BGD APPLICATION") {
             steps {
                 sh """
                   oc apply -f ./gitops-examples/bgd/
